@@ -1,0 +1,187 @@
+--====== Load Spawner ======--
+loadstring = _G.loadstring
+
+local spawner = loadstring(game:HttpGet(
+	"https://raw.githubusercontent.com/VoorPhale012/Fogroom/refs/heads/main/Wwwhyyyyil"
+))()
+
+--====== Create Entity ======--
+local entity = spawner.Create({
+	Entity = {
+		Name = "A-60",
+		Asset = "rbxassetid://71999612302636",
+		HeightOffset = 0
+	},
+	Lights = {
+		Flicker = { Enabled = false, Duration = 0.8 },
+		Shatter = false,
+		Repair = false
+	},
+	Earthquake = { Enabled = false },
+	CameraShake = { Enabled = true, Range = 100, Values = {1.5, 20, 0.1, 1} },
+	Movement = { Speed = 300, Delay = 4, Reversed = false },
+	Rebounding = { Enabled = false, Type = "Blitz", Min = 1, Max = 1, Delay = 0 },
+	Damage = { Enabled = true, Range = 50, Amount = 160 },
+	Crucifixion = { Enabled = true, Range = 50, Resist = false, Break = true },
+	Death = {
+		Type = "Default",
+		Hints = {"Lol", "LOL", "LOLLLLLLLLLL","LOLLLLLLLLLLLLLLLLLLL"},
+		Cause = "NTz-60 The Multi Monster"
+	}
+})
+
+--====== AUDIO LOADER ======--
+local function GitAud(url, name)
+	local fileName = name .. ".mp3"
+	if not isfile(fileName) then
+		writefile(fileName, game:HttpGet(url))
+	end
+	return (getcustomasset or getsynasset)(fileName)
+end
+
+local sound1
+local sound2
+
+--============================--
+--          ON SPAWN          --
+--============================--
+
+entity:SetCallback("OnSpawned", function()
+
+	print("A-60 has spawned")
+
+	local Player = game.Players.LocalPlayer
+	if not Player then return end
+	local PlayerGui = Player:WaitForChild("PlayerGui")
+
+	-- STATIC EFFECT
+	local staticGui = Instance.new("ScreenGui")
+	staticGui.Name = "A60Static"
+	staticGui.IgnoreGuiInset = true
+	staticGui.ResetOnSpawn = false
+	staticGui.Parent = PlayerGui
+
+	local staticImg = Instance.new("ImageLabel")
+	staticImg.Size = UDim2.new(1,0,1,0)
+	staticImg.BackgroundTransparency = 1
+	staticImg.Image = "rbxassetid://120865463688240"
+	staticImg.ImageTransparency = 0.95
+	staticImg.ZIndex = 50
+	staticImg.Parent = staticGui
+
+	local running = true
+	task.spawn(function()
+		while running do
+			staticImg.ImageTransparency = 0.93 + math.random() * 0.2
+			task.wait(0.1)
+		end
+	end)
+
+	task.delay(5, function()
+		running = false
+		if staticGui then staticGui:Destroy() end
+	end)
+
+	-- SPAWN TEXT
+	task.delay(4, function()
+
+		local ScreenGui = Instance.new("ScreenGui")
+		ScreenGui.Name = "A60Message"
+		ScreenGui.IgnoreGuiInset = true
+		ScreenGui.ResetOnSpawn = false
+		ScreenGui.Parent = PlayerGui
+
+		local label = Instance.new("TextLabel")
+		label.Size = UDim2.new(0,400,0,50)
+		label.Position = UDim2.new(0.5,-200,0.5,50)
+		label.BackgroundTransparency = 1
+		label.TextSize = 26
+		label.Font = Enum.Font.Oswald
+		label.TextColor3 = Color3.fromRGB(255,64,64)
+		label.TextStrokeTransparency = 0.2
+		label.TextStrokeColor3 = Color3.new(0,0,0)
+		label.TextWrapped = true
+
+		label.Text = ({
+			"coming through.",
+			"heads up.",
+			"incoming.",
+			"ready?",
+			"think fast."
+		})[math.random(1,5)]
+
+		label.Parent = ScreenGui
+
+		task.delay(2.5, function()
+			if ScreenGui then ScreenGui:Destroy() end
+		end)
+
+	end)
+
+	-- AUDIO
+	task.wait(0.1)
+
+	local model = workspace:FindFirstChild("A-60")
+	if not model then return end
+	local part = model:FindFirstChildWhichIsA("BasePart") or model
+
+	sound1 = Instance.new("Sound")
+	sound1.SoundId = GitAud(
+		"https://github.com/vuivuiviu2/Pressure-/raw/refs/heads/main/I%20nheooooo_1.mp3",
+		"Laugh1a"
+	)
+	sound1.Volume = 7
+	sound1.Looped = true
+	sound1.RollOffMaxDistance = 500
+	sound1.Parent = part
+	sound1:Play()
+
+	sound2 = Instance.new("Sound")
+	sound2.SoundId = GitAud(
+		"https://github.com/vuivuiviu2/Pressure-/raw/refs/heads/main/I%20nheooooo.mp3",
+		"Laugh2a"
+	)
+	sound2.Volume = 15
+	sound2.Looped = true
+	sound2.RollOffMaxDistance = 150
+	sound2.Parent = part
+	sound2:Play()
+
+	model:GetAttributeChangedSignal("BeingBanished"):Connect(function()
+		if model:GetAttribute("BeingBanished") == true then
+			if sound1 then sound1:Stop() end
+			if sound2 then sound2:Stop() end
+
+			local crucifixSound = Instance.new("Sound")
+			crucifixSound.SoundId = GitAud(
+				"https://github.com/vuivuiviu2/Deliria-Mode-Entity-/raw/refs/heads/main/NTz%20thanhgia.mp3",
+				"CrucifixSound"
+			)
+			crucifixSound.Volume = 6
+			crucifixSound.Parent = workspace
+			crucifixSound:Play()
+		end
+	end)
+
+end)
+
+--============================--
+-- CLEANUP
+--============================--
+
+entity:SetCallback("OnDespawned", function()
+	if sound1 then sound1:Destroy() end
+	if sound2 then sound2:Destroy() end
+
+	local Player = game.Players.LocalPlayer
+	if Player and Player:FindFirstChild("PlayerGui") then
+		local static = Player.PlayerGui:FindFirstChild("A60Static")
+		if static then static:Destroy() end
+	end
+end)
+
+--============================--
+-- RUN
+--============================--
+
+entity:Run()
