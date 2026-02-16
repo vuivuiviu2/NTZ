@@ -1,0 +1,117 @@
+--============================--
+--        NTZ ENTITY SYSTEM
+--============================--
+
+local LatestRoom = game.ReplicatedStorage.GameData.LatestRoom
+
+--------------------------------------------------
+-- A-60 (1/50 mỗi cửa)
+--------------------------------------------------
+
+coroutine.wrap(function()
+
+    local jobId = game.JobId
+    local numbers = jobId:gsub("%D+", "")
+    local seed = tonumber(numbers:sub(1,9)) or os.time()
+    local rng = Random.new(seed)
+
+    LatestRoom.Changed:Connect(function()
+
+        local roll = rng:NextInteger(1,50)
+        print("🎲 A-60 Roll:", roll, "/50")
+
+        if roll == 1 then
+            print("⚡ A-60 SPAWNING")
+            loadstring(game:HttpGet(
+                "https://raw.githubusercontent.com/vuivuiviu2/NTZ/refs/heads/main/60"
+            ))()
+        end
+
+    end)
+
+end)()
+
+--------------------------------------------------
+-- Huytran (60s - không đợi cửa)
+--------------------------------------------------
+
+coroutine.wrap(function()
+    while true do
+        task.wait(40)
+        print("😈 Huytran spawning")
+        loadstring(game:HttpGet(
+            "https://raw.githubusercontent.com/vuivuiviu2/NTZ/refs/heads/main/Huytran"
+        ))()
+    end
+end)()
+
+--------------------------------------------------
+-- NTzv1 (150s + cửa)
+--------------------------------------------------
+
+coroutine.wrap(function()
+    while true do
+        task.wait(120)
+        print("💨 NTzv1 ready...")
+        LatestRoom.Changed:Wait()
+        loadstring(game:HttpGet(
+            "https://raw.githubusercontent.com/vuivuiviu2/NTZ/refs/heads/main/NTzv1"
+        ))()
+    end
+end)()
+
+--------------------------------------------------
+-- CHITONG (222s + cửa)
+--------------------------------------------------
+
+coroutine.wrap(function()
+    while true do
+        task.wait(200)
+        print("👁 CHITONG ready...")
+        LatestRoom.Changed:Wait()
+        loadstring(game:HttpGet(
+            "https://raw.githubusercontent.com/vuivuiviu2/NTZ/refs/heads/main/CHITONG"
+        ))()
+    end
+end)()
+
+--------------------------------------------------
+-- Pinkie (350s + cửa)
+--------------------------------------------------
+
+coroutine.wrap(function()
+    while true do
+        task.wait(333)
+        print("💗 Pinkie ready...")
+        LatestRoom.Changed:Wait()
+        loadstring(game:HttpGet(
+            "https://raw.githubusercontent.com/vuivuiviu2/NTZ/refs/heads/main/Pinkie"
+        ))()
+    end
+end)()
+
+--------------------------------------------------
+-- NTZrise (420s, tối đa 2 lần)
+--------------------------------------------------
+
+coroutine.wrap(function()
+
+    local spawnCount = 0
+    local maxSpawns = 2
+
+    while spawnCount < maxSpawns do
+        task.wait(543)
+        print("🔥 NTZrise ready...")
+        LatestRoom.Changed:Wait()
+
+        spawnCount += 1
+        print("💀 NTZrise spawning ("..spawnCount.."/2)")
+
+        loadstring(game:HttpGet(
+            "https://raw.githubusercontent.com/vuivuiviu2/NTZ/refs/heads/main/NTZrise"
+        ))()
+    end
+
+    print("🛑 NTZrise reached max limit")
+
+end)()
